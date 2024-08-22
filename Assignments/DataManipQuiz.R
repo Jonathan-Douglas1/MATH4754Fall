@@ -25,3 +25,20 @@ ddt[ddt$LENGTH > 48 & ddt$WEIGHT > 1200,]
 
 #Another one
 ddt[ddt$SPECIES == "LMBASS" | ddt$RIVER == "TRM",]
+
+#EL PIPE (Piping example)
+dplyrcat <- ddt %>% filter(SPECIES == "CCATFISH")
+
+
+#Question 1: find the mean weight of SMBuffalo
+ddt %>% filter(SPECIES == "SMBUFFALO") %>% summarize(mean_WEIGHT = mean(WEIGHT))
+
+#Question 2:
+ddt %>% filter(SPECIES == "CCATFISH" & DDT > 33) %>% summarize(mean_LENGTH = mean(LENGTH))
+
+#Question 3:
+ddt %>% filter(SPECIES == "LMBASS" | SPECIES == "SMBUFFALO") %>% summarize(n = n())
+#NOT DONE
+
+#Question 4:
+ddt %>% filter(LENGTH > 40 & WEIGHT > 1000) %>% summarize(n = n())

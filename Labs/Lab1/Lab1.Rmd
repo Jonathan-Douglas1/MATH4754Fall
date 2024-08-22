@@ -10,6 +10,7 @@ output:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
+library(dplyr)
 ```
 
 # Tasks
@@ -23,13 +24,39 @@ getwd()
 
 ## Task 2:
 ```{r}
-ddt <- read.csv("DDT-1.csv")
+ddt <- read.csv("DDT-1.csv", header = TRUE)
 head(ddt)
+```
+
+## Task 3:
+```{r}
+#Print the head of ddt
+head(ddt)
+```
+The qualitative variables in dtt are "River" and "Species". The quantitative variables are mile, length, weight, and ddt.
+
+To find the number of species: Use the unique() method
+```{r}
+#Number of species in the dataset
+unique(ddt$SPECIES) %>% length()
+```
+
+Subset the dataset so to show the observations with SPECIES of LMBASS and WEIGHT bigger than 800gms
+```{r}
+#Filter and print the data
+ddt %>% filter(SPECIES == "LMBASS" & WEIGHT > 800)
+```
+Subset the dataset so to show the observations where the RIVER is SCM and DDT bigger than 4.0
+
+```{r}
+
 ```
 
 
 
 
+
+## Task 4:
 
 
 ## R Markdown

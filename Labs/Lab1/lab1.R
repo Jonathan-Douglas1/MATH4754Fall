@@ -5,14 +5,14 @@ getwd()
 # file.choose() should not be used in R markdown.
 #Best to use a file name example read.csv("DDT.csv")
 ## How do we read data files into R?
-## Most of the data we will use will come from a collection of excel files zipped 
+## Most of the data we will use will come from a collection of excel files zipped
 ## together and made available on CANVAS
 # Read in the data from DDT
 # header is true because of variable names on the top of each column
 
-#ddt=read.table(file.choose(),sep=",",header=TRUE) 
+#ddt=read.table(file.choose(),sep=",",header=TRUE)
 
-ddt = read.csv("DDT.csv")
+ddt = read.csv("/Labs/Lab1/DDT-1.csv")
 
 # First six lines
 head(ddt)
@@ -182,9 +182,9 @@ scatterhist = function(x, y, xlab="", ylab=""){
   par(mar=c(3,0,1,1))
   barplot(yhist$counts, axes=FALSE, xlim=c(0, top), space=0, horiz=TRUE)
   par(oma=c(3,3,0,0))
-  mtext(xlab, side=1, line=1, outer=TRUE, adj=0, 
+  mtext(xlab, side=1, line=1, outer=TRUE, adj=0,
         at=.8 * (mean(x) - min(x))/(max(x)-min(x)))
-  mtext(ylab, side=2, line=1, outer=TRUE, adj=0, 
+  mtext(ylab, side=2, line=1, outer=TRUE, adj=0,
         at=(.8 * (mean(y) - min(y))/(max(y) - min(y))))
 }
 
