@@ -49,32 +49,118 @@ ddt %>% filter(SPECIES == "LMBASS" & WEIGHT > 800)
 Subset the dataset so to show the observations where the RIVER is SCM and DDT bigger than 4.0
 
 ```{r}
-
+#Filter and print the data
+ddt %>% filter(RIVER == "SCM" & DDT > 4.0)
 ```
-
-
-
-
 
 ## Task 4:
+#### Question 1: The mean length of fish in Dataframe
 
-
-## R Markdown
-
-This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
-
-When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
-
-```{r cars}
-summary(cars)
+```{r}
+#Calculate the mean length of the fish
+mean(ddt$LENGTH)
 ```
 
-## Including Plots
+#### Question 2: Calculate standard deviation of the weight of the fish
+```{r}
+#Standard deviation from weight
+sd(ddt$WEIGHT)
+```
+#### Question 3: Plot Length vs Weight
+```{r}
+#Plot Length vs Weight
+plot(WEIGHT~LENGTH, data = ddt)
+```
+True: the above graph is the one seen in the lab.
 
-You can also embed plots, for example:
-
-```{r pressure, echo=FALSE}
-plot(pressure)
+#### Question 4: What does v/20 return
+```{r}
+v = 1:20
+v/20
 ```
 
-Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+
+
+## Task 5:
+#### Step 1: Make a table of the rivers
+```{r}
+#Create a table of the river
+riv=with(ddt,table(RIVER))
+riv
+```
+
+#### Step 2: Make a colored barchart of the rivers
+```{r}
+#Create a color-coded barplot of the rivers
+barplot(riv,col=rainbow(4))
+```
+
+#### Step 3: Create a table of rivers crossed with the species of fish
+```{r}
+#Create a table of the river
+riv_sp=with(ddt,table(RIVER, SPECIES))
+riv_sp
+```
+#### Step 4: Create a barplot with rivers crossed with species of fish
+```{r}
+#Create a color-coded barplot of the rivers
+barplot(riv_sp,beside = TRUE, col=rainbow(4))
+```
+
+## Task 6:
+#### Step 1: Make a pie chart of fish species
+```{r}
+#Plot pie chart of fish species
+sp = with(ddt, table(SPECIES))
+pie(sp, col = 1:4)
+```
+
+#### Step 2: Make a pie chart of the rivers
+```{r}
+#Plot pie chart of fish species
+sp = with(ddt, table(RIVER))
+pie(sp, col = 1:4)
+```
+
+##Task 7:
+#### Step 1: Create a boxplot of the variable DDT
+```{r}
+#Create a boxplot of the DDT
+boxplot(ddt$DDT)
+```
+
+#### Step 2: Make a boxplot of WEIGHT
+```{r}
+#Plot a boxplot of WEIGHT
+boxplot(ddt$WEIGHT)
+```
+
+#### Step 3: Plot the boxplot of the variable LENGTH
+```{r}
+#Create boxplot of length
+boxplot(ddt$LENGTH)
+```
+
+## Task 8:
+#### Step 1:	Make a coplot of LENGTH Vs WEIGHT given RIVER
+```{r}
+#embellish the plot with species using color using 'ifelse(test,yes,no)'
+fishcol=with(ddt,ifelse(SPECIES=="CCATFISH","Red",
+                        ifelse(SPECIES=="SMBUFFALO","Blue","Green")))
+
+coplot(WEIGHT~LENGTH|RIVER,data=ddt,col=fishcol)
+```
+
+#### Step 2: Make a coplot of DDT Vs WEIGHT given SPECIES
+```{r}
+coplot(WEIGHT~DDT|SPECIES,data=ddt,col=fishcol)
+```
+
+## Task 9: Recreate the plots is the lab
+
+#### First graph: Boxplot
+```{r}
+#Create boxplot with our name on it using ggplot
+ggplot(ddt, aes(x = SPECIES, y = WEIGHT, fill = RIVER)) + geom_boxplot() + ggtitle("Jonathan Douglas")
+```
+
