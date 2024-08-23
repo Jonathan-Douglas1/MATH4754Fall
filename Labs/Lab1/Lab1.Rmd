@@ -11,6 +11,7 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(dplyr)
+library(ggplot2)
 ```
 
 # Tasks
@@ -71,6 +72,7 @@ sd(ddt$WEIGHT)
 #Plot Length vs Weight
 plot(WEIGHT~LENGTH, data = ddt)
 ```
+
 True: the above graph is the one seen in the lab.
 
 #### Question 4: What does v/20 return
@@ -162,5 +164,17 @@ coplot(WEIGHT~DDT|SPECIES,data=ddt,col=fishcol)
 ```{r}
 #Create boxplot with our name on it using ggplot
 ggplot(ddt, aes(x = SPECIES, y = WEIGHT, fill = RIVER)) + geom_boxplot() + ggtitle("Jonathan Douglas")
+```
+
+####Step 2: Create the second plot: Violin plot
+```{r}
+#Create the violin plot
+ggplot(ddt, aes(x = RIVER, y = LENGTH, fill = SPECIES)) + geom_violin() + ggtitle("Jonathan Douglas")
+```
+
+#### Step 3: Create the scatterplot
+```{r}
+#Create the scatter plot
+ggplot(ddt, aes(x = WEIGHT, y = LENGTH, color = SPECIES)) + geom_point()+ ggtitle("Jonathan Douglas")
 ```
 
