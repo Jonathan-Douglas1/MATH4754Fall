@@ -166,7 +166,7 @@ coplot(WEIGHT~DDT|SPECIES,data=ddt,col=fishcol)
 ggplot(ddt, aes(x = SPECIES, y = WEIGHT, fill = RIVER)) + geom_boxplot() + ggtitle("Jonathan Douglas")
 ```
 
-####Step 2: Create the second plot: Violin plot
+#### Step 2: Create the second plot: Violin plot
 ```{r}
 #Create the violin plot
 ggplot(ddt, aes(x = RIVER, y = LENGTH, fill = SPECIES)) + geom_violin() + ggtitle("Jonathan Douglas")
