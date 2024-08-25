@@ -2,10 +2,12 @@
 title: "Lab1"
 author: "Jonathan Douglas"
 date: "`r Sys.Date()`"
-output: 
+output:
+  pdf_document:
+    toc: true
   html_document:
-    toc: yes
-    toc_float: yes
+    toc: true
+    toc_float: true
 ---
 
 ```{r setup, include=FALSE}
@@ -16,45 +18,50 @@ library(ggplot2)
 
 # Tasks
 
-## Task 1:
+## Task 1: Set the Working Directory
 
 ```{r}
+setwd("/Users/jonathandouglas/MATH4753/FALL244753doug0080/Labs/Lab1")
 getwd()
 #Hello
 ```
 
-## Task 2:
+## Task 2: Read in the DDT File as a CSV
 ```{r}
 ddt <- read.csv("DDT-1.csv", header = TRUE)
 head(ddt)
 ```
 
-## Task 3:
+## Task 3: DDT Data manipulation
+
+#### Step 1: Sort Variables as Qualitative and Quantitative
 ```{r}
-#Print the head of ddt
+#ddt already exists, Print the head of ddt
 head(ddt)
 ```
 The qualitative variables in dtt are "River" and "Species". The quantitative variables are mile, length, weight, and ddt.
 
-To find the number of species: Use the unique() method
+#### Step 2: To find the number of species: Use the unique() method
 ```{r}
 #Number of species in the dataset
 unique(ddt$SPECIES) %>% length()
 ```
 
-Subset the dataset so to show the observations with SPECIES of LMBASS and WEIGHT bigger than 800gms
+#### Step 3: Subset the dataset so to show the observations with SPECIES of LMBASS and WEIGHT bigger than 800gms
 ```{r}
 #Filter and print the data
 ddt %>% filter(SPECIES == "LMBASS" & WEIGHT > 800)
 ```
-Subset the dataset so to show the observations where the RIVER is SCM and DDT bigger than 4.0
+
+#### Step 4: Subset the dataset so to show the observations where the RIVER is SCM and DDT bigger than 4.0
 
 ```{r}
 #Filter and print the data
 ddt %>% filter(RIVER == "SCM" & DDT > 4.0)
 ```
 
-## Task 4:
+## Task 4: Clicker Questions
+
 #### Question 1: The mean length of fish in Dataframe
 
 ```{r}
@@ -70,10 +77,10 @@ sd(ddt$WEIGHT)
 #### Question 3: Plot Length vs Weight
 ```{r}
 #Plot Length vs Weight
-plot(WEIGHT~LENGTH, data = ddt)
+plot(LENGTH~WEIGHT, data = ddt)
 ```
 
-True: the above graph is the one seen in the lab.
+False: The graph above is not the one seen in the lab, as the axis are flipped. (0)
 
 #### Question 4: What does v/20 return
 ```{r}
@@ -81,9 +88,9 @@ v = 1:20
 v/20
 ```
 
+The last value is 1.00
 
-
-## Task 5:
+## Task 5: Chart Creation
 #### Step 1: Make a table of the rivers
 ```{r}
 #Create a table of the river
@@ -91,7 +98,7 @@ riv=with(ddt,table(RIVER))
 riv
 ```
 
-#### Step 2: Make a colored barchart of the rivers
+#### Step 2: Make a colored barplot of the rivers
 ```{r}
 #Create a color-coded barplot of the rivers
 barplot(riv,col=rainbow(4))
@@ -109,7 +116,7 @@ riv_sp
 barplot(riv_sp,beside = TRUE, col=rainbow(4))
 ```
 
-## Task 6:
+## Task 6: Pie Charts
 #### Step 1: Make a pie chart of fish species
 ```{r}
 #Plot pie chart of fish species
@@ -124,7 +131,8 @@ sp = with(ddt, table(RIVER))
 pie(sp, col = 1:4)
 ```
 
-##Task 7:
+## Task 7: Box Plots
+
 #### Step 1: Create a boxplot of the variable DDT
 ```{r}
 #Create a boxplot of the DDT
@@ -143,24 +151,24 @@ boxplot(ddt$WEIGHT)
 boxplot(ddt$LENGTH)
 ```
 
-## Task 8:
+## Task 8: Coplots
 #### Step 1:	Make a coplot of LENGTH Vs WEIGHT given RIVER
 ```{r}
 #embellish the plot with species using color using 'ifelse(test,yes,no)'
 fishcol=with(ddt,ifelse(SPECIES=="CCATFISH","Red",
                         ifelse(SPECIES=="SMBUFFALO","Blue","Green")))
 
-coplot(WEIGHT~LENGTH|RIVER,data=ddt,col=fishcol)
+coplot(LENGTH~WEIGHT|RIVER,data=ddt,col=fishcol)
 ```
 
 #### Step 2: Make a coplot of DDT Vs WEIGHT given SPECIES
 ```{r}
-coplot(WEIGHT~DDT|SPECIES,data=ddt,col=fishcol)
+coplot(DDT~WEIGHT|SPECIES,data=ddt,col=fishcol)
 ```
 
 ## Task 9: Recreate the plots is the lab
 
-#### First graph: Boxplot
+#### Step 1: Boxplot
 ```{r}
 #Create boxplot with our name on it using ggplot
 ggplot(ddt, aes(x = SPECIES, y = WEIGHT, fill = RIVER)) + geom_boxplot() + ggtitle("Jonathan Douglas")
