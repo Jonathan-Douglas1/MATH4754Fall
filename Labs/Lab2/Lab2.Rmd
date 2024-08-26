@@ -1,0 +1,50 @@
+---
+title: "Lab2"
+author: "Jonathan Douglas"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(Intro2R)
+```
+
+# Tasks:
+
+## Task 1: Download Files and Set Working Directory
+```{r}
+setwd("/Users/jonathandouglas/MATH4753/FALL244753doug0080/Labs/Lab2")
+
+#Check the working directory
+getwd()
+```
+
+## Task 2: Change file type and read in data
+```{r}
+#Read in the datafile
+EPAGAS = read.csv("EPAGAS.csv")
+
+#Print the first 6 lines
+head(EPAGAS)
+```
+
+# Task 3:  Use the emperical formula to find outliers of mpg
+```{r}
+#Create mpg vector
+mpg = EPAGAS$MPG
+
+#Use the emperical formula for z
+z = (mpg - mean(mpg)) / sd(mpg)
+
+#Use the [] methods to subset data that can be considered an outlier or possible outlier
+print("Possible outliers:")
+mpg[abs(z) >= 2.0 & abs(z) <= 3.0]
+
+print("Statistical outliers:")
+mpg[abs(z) > 3.0]
+```
+
