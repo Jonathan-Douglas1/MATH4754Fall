@@ -32,7 +32,7 @@ EPAGAS = read.csv("EPAGAS.csv")
 head(EPAGAS)
 ```
 
-# Task 3:  Use the emperical formula to find outliers of mpg
+## Task 3:  Use the emperical formula to find outliers of mpg
 ```{r}
 #Create mpg vector
 mpg = EPAGAS$MPG
@@ -40,11 +40,81 @@ mpg = EPAGAS$MPG
 #Use the emperical formula for z
 z = (mpg - mean(mpg)) / sd(mpg)
 
+#Verify the results 
+print("Results for verification:")
+#Mean of std deviations
+mean(z) 
+print("(essentially 0)")
+#standard deviation of std deviations
+sd(z)**2
+
 #Use the [] methods to subset data that can be considered an outlier or possible outlier
 print("Possible outliers:")
 mpg[abs(z) >= 2.0 & abs(z) <= 3.0]
+```
 
+
+```{r}
 print("Statistical outliers:")
 mpg[abs(z) > 3.0]
 ```
+
+```{r}
+#Use the lattice package to make the boxplot with colored dots
+#First, sort the dots into the different colors
+# Plot the outliers in red and the possible outliers in blue
+outlier_col = ifelse(abs(z)>3, "Red",
+        ifelse(abs(z)>=2 &abs(z)<=3,"Blue", "Black"))
+```
+
+```{r}
+#Now, create the dotplot
+library(lattice)
+dotplot(mpg,col=outlier_col)
+```
+
+## Task 4: 
+```{r}
+ggplot(data.frame(mpg), aes(x = mpg)) + geom_boxplot(notch = TRUE, notchwidth = 0.5, orientation = 'y', staplewidth = 0.35, fill = "black") + ggtitle("Boxplot of EPA MPG")
+#Create the scatter plot
+#ggplot(ddt, aes(x = WEIGHT, y = LENGTH, color = SPECIES)) + geom_point()+ ggtitle("Jonathan Douglas")
+
+```
+
+#### Step 2: Use Chebyshev’s theorem
+```{r}
+#Predict the portion of the data that within two standard deviations of the mean.
+#Use the formula 1 - (1/z^2):
+print("Portion of data within two std deviations")
+1 - (1/2**2)
+```
+
+#### Step 3: Use R to caluclate the proportion within 2 std deviations of the mean
+```{r}
+#Find the length of data within two std deviations
+num_in_two = length(mpg[abs(z) < 2])
+#Find the length of mpg 
+total_length = length(mpg)
+
+#Find the percentage of data in 2 std deviations
+print("Fraction of data in two standard deviations:")
+num_in_two / total_length
+```
+
+Chebushev's Theorem does support this data.
+
+#### Step 4: Use the empirical rule to find the fraction of data in 2 std deviations
+
+The emperical rule finds that approximately 95% of data is found in the second standard deviation.
+This corresponds very well to the observation that 96% of the data is in the 2 standard deviations.
+
+Can the empirical formula be valid here?
+Check for:
+1. Unimodality
+2. Symmetric through the mode
+
+```{r}
+hist(mpg)
+```
+This dataset exhibits these conditions, so the Emperical rule is valid in this case.
 
