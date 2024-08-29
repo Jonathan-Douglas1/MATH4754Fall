@@ -6,11 +6,14 @@ output:
   html_document:
     toc: true
     toc_float: true
+  pdf_document:
+    toc: true
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(Intro2R)
+library(ggplot2)
 ```
 
 # Tasks:
@@ -33,6 +36,8 @@ head(EPAGAS)
 ```
 
 ## Task 3:  Use the emperical formula to find outliers of mpg
+
+#### Part 1 and 2: Read in data and perform z transformation.
 ```{r}
 #Create mpg vector
 mpg = EPAGAS$MPG
@@ -41,24 +46,27 @@ mpg = EPAGAS$MPG
 z = (mpg - mean(mpg)) / sd(mpg)
 
 #Verify the results 
-print("Results for verification:")
-#Mean of std deviations
-mean(z) 
-print("(essentially 0)")
-#standard deviation of std deviations
-sd(z)**2
+cat("Results for verification: Mean of z: ", round(mean(z), 6), "\n")
 
+#Standard deviation of std deviations
+cat("Variance of z: ", sd(z)**2)
+
+```
+
+#### Task 3: Find Possible Outliers
+```{r}
 #Use the [] methods to subset data that can be considered an outlier or possible outlier
 print("Possible outliers:")
 mpg[abs(z) >= 2.0 & abs(z) <= 3.0]
 ```
 
-
+#### Task 4: Find statisitcal outliers
 ```{r}
 print("Statistical outliers:")
 mpg[abs(z) > 3.0]
 ```
 
+#### Task 5: Create Dotplot
 ```{r}
 #Use the lattice package to make the boxplot with colored dots
 #First, sort the dots into the different colors
@@ -74,10 +82,10 @@ dotplot(mpg,col=outlier_col)
 ```
 
 ## Task 4: 
+#### Step 1: Create line plot with colored outliers
 ```{r}
+#Create the line plot
 ggplot(data.frame(mpg), aes(x = mpg)) + geom_boxplot(notch = TRUE, notchwidth = 0.5, orientation = 'y', staplewidth = 0.35, fill = "black") + ggtitle("Boxplot of EPA MPG")
-#Create the scatter plot
-#ggplot(ddt, aes(x = WEIGHT, y = LENGTH, color = SPECIES)) + geom_point()+ ggtitle("Jonathan Douglas")
 
 ```
 
