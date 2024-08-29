@@ -36,6 +36,20 @@ F - <50%
 
 ## Question 2: 
 
+#### Part A:
+```{r}
+#Import the ddt dataset
+ddt = Intro2R::ddt
+
+m=with(ddt, as.numeric(factor(MILE))) # A
+length(unique(m)) #B
+
+#Create the required coplot
+coplot(ddt$LENGTH ~ ddt$WEIGHT | ddt$RIVER * ddt$SPECIES, col = unique(m))
+```
+#### Part B:
+The bottom left three plots are showing the Length vs Weight plot of Catfish in the FCM, LCM, and SCM rivers. 
+
 ## Question 3:
 
 a. Quantitative
@@ -92,6 +106,431 @@ aftershocks = eq[after_ind,] #Take sample of aftershocks
 print(aftershocks)
 ```
 
-#### Supplimentary Question 
+#### Supplimentary Questions: Create time series plot
+```{r}
+#Create plot
+plot(ts(eq$MAG))
+```
 
+Find the median of the magnitude variable
+```{r}
+#Find the median of the earthquakes median
+median(eq$MAGNITUDE)
+```
+
+## Question 7: MS Statistics in Action
+
+#### Question a:
+The data collection method that was used here was stratified sampling. This is because samples of fish were taken from multiple different subgroups, with each group being a river or tributary. The data is also stratified into specific distances from the mouths of the rivers and tributaries.
+
+#### Question b:
+The population in this case is all the fish in the Tennessee river and its tributaries.
+
+#### Question c: 
+The qualitiative variables in this study are the river sampled and the species of fish. These variables can only be catagorized. 
+
+## Question 8:
+
+#### Part a:
+The data is represented on a bar chart.
+
+#### Part b:
+The variable measured is the design of social robots.
+
+#### Part c:
+The design that is currently used the most is the "Legs ONLY" design.
+
+#### Part d:
+```{r}
+#Calculate the class frequency
+freq = c(15, 8, 63, 20)#Numbers from the book
+designs = c("None", "Both", "Legs ONLY", "Wheels ONLY")
+
+#Find the total number of samples
+n = sum(freq)
+
+rela_freq = freq / n #Find the relative frequency
+
+rela_freq
+```
+
+#### Part e:
+```{r}
+#Create the Pareto diagram with the data
+#Import the Pareto function:
+pareto <- function(x, mn = "Pareto barplot", ...) {  # x is a vector
+  x.tab = table(x)
+  xx.tab = sort(x.tab, decreasing = TRUE, index.return = FALSE)
+  cumsum(as.vector(xx.tab)) -> cs
+  length(x.tab) -> lenx
+  bp <- barplot(xx.tab, ylim = c(0,max(cs)),las = 2)
+  lb <- seq(0,cs[lenx], l = 11)
+  axis(side = 4, at = lb, labels = paste(seq(0, 100, length = 11), "%", sep = ""), las = 1, line = -1, col = "Blue", col.axis = "Red")
+  for(i in 1:(lenx-1)){
+    segments(bp[i], cs[i], bp[i+1], cs[i+1], col = i, lwd = 2)
+  }
+  title(main = mn, ...)
+}
+
+#Use Pareto on robot data
+catagories = c("None", "Both", "Legs ONLY", "Wheels ONLY")
+data = rep(catagories, freq)
+pareto(data, mn = "Pareto of Robotic Limbs")
+```
+
+#Question 9
+
+Info for question
+```{r}
+attacks = c("DDoS", "Info Disclosure", "Remote Code Exec", "Spoofing", "Privilege Elevation")
+num_att = c(6,8,22,3,11)
+```
+
+#### Part a:
+```{r}
+#Create vector
+n = 50
+program = c("Windows", "Explorer", "Office")
+errors = c(32, 6, 12)
+
+#create a pie polt
+tab = table(program)
+pie(errors, labels = program, col = 1:3, main = "Pie Chart of Errors vs Program")
+```
+
+Clearly, we can see that Explorer has the lowest portion of security issues.
+
+#### Part B: The Pareto Diagram
+```{r}
+#Use the pareto function from earlier
+data = rep(program, errors)
+
+pareto(data, mn = "Pareto of Microsoft Terms")
+```
+
+## Question 10:
+```{r}
+library(plotrix)
+#Create a pie chart of the defect variable
+defects = read.csv("SWDEFECTS.csv")
+
+#head(defects)
+tab=table(defects$defect)
+rtab=tab/sum(tab)
+#round(rtab,2)
+pie3D(rtab,labels=list("OK","Defective"),main="pie plot of SWD")
+
+```
+
+## Question 11
+
+```{r}
+#Import the voltage data
+#First, create the data table.
+voltage = read.csv("VOLTAGE.csv")
+#voltage
+
+old = voltage[voltage$LOCATION == "OLD",]$VOLTAGE
+
+
+#max(old)
+#min(old)
+lept<-min(old)-0.05
+rept<-max(old)+0.05
+rnge<-rept-lept
+inc<-rnge/9
+inc
+seq(lept, rept,by=inc)->cl
+cl
+cvtn<-cut(old,breaks=cl)
+old.tab=table(cvtn)
+n = length(old)
+barplot(old.tab / n,space=0,main="Relative Frequency Histogram (OLD)",las=2)
+#hist(old,nclass=10)
+
+
+#Add a relative frequency histogram to the table 
+#volt_table$Relative_Freq <-  volt_table / n
+```
+
+#### Part B: Stem and leaf plot
+```{r}
+stem(old)
+```
+I still think that the histogram is still the best visualization because it shows the 
+relative frequency.
+
+#### Part C: Histogram for new data
+```{r}
+#Import the voltage data
+#First, create the data table.
+voltage = read.csv("VOLTAGE.csv")
+#voltage
+
+new = voltage[voltage$LOCATION == "NEW",]$VOLTAGE
+
+lept<-min(new)-0.05
+rept<-max(new)+0.05
+rnge<-rept-lept
+inc<-rnge/9
+inc
+seq(lept, rept,by=inc)->cl
+cl
+cvtn<-cut(new,breaks=cl)
+new.tab=table(cvtn)
+n = length(new)
+barplot(new.tab / n,space=0,main="Relative Frequency Histogram (OLD)",las=2)
+#hist(old,nclass=10)
+
+
+#Add a relative frequency histogram to the table 
+#volt_table$Relative_Freq <-  volt_table / n
+```
+
+#### Part D:
+This new process is not as good because there are many more data points that are below the threshold of 9.3 volts. 
+
+#### Part E:
+```{r}
+#Calcuate the mean, median, and mode of old voltage
+mean_old = mean(old)
+median_old = median(old)
+mode_old = names(which.max(old.tab))[1]#This mode is for the bins in the histogram
+
+#Print these stats:
+print(cat("Old Mean: ", mean_old, ", Median: ", median_old, ", Mode: ", mode_old, "\n"))
+
+#Calcuate the mean, median, and mode of old voltage
+mean_new = mean(new)
+median_new = median(new)
+mode_new = names(which.max(new.tab))[1]#This mode is for the bins in the histogram
+
+#Print these stats:
+print(cat("New Mean: ", mean_new, ", Median: ", median_new, ", Mode: ", mode_new))
+```
+
+These results are showing that the old mean and median were higher, while the new median and mode were lower. This shows that the new process overall creates a significantly lower voltage. The mean is the most useful measure of central tendancy because it shows when the process creates higher or lower values than expected. The mode isn't as helpful, but does show that the new process creates a lot of values less than 9 volts.
+
+#### Part F:
+```{r}
+#Calculate z-score for voltage reading of 10.5 at old location 
+v= 10.5
+sd_v_old = sd(old)
+
+z_score_old = (v- mean_old) / sd_v_old
+z_score_old
+```
+^The z score is only 1.29, not an unusual value.
+
+#### Part G:
+```{r}
+#Calculate z-score for voltage reading of 10.5 at old location 
+v= 10.5
+sd_v_new = sd(new)
+
+z_score_new = (v - mean_new) / sd_v_new
+z_score_new
+```
+
+#### Part H:
+A voltage of 10.5 is much more likely to be found in the old voltage dataset because the z score is less than two, meaning that this data point is likely to be found in the normal data. 10.5 volts is less likely in the second dataset because this z-score is over two, marking the datapoint as much less likely to occur and a possible outlier.
+
+#### Part I: Boxplot of old data
+```{r}
+#Create box plot of old data:
+boxplot(old, main = "Old Voltages", ylab = "volts")
+```
+
+There are four outliers detected here.
+
+#### Part J: ZScore of old data
+```{r}
+#Use Z scores to detect outliers here
+z_old = (old - mean(old))/ sd(old)
+
+#Display outlier values
+print("Outlier Values:")
+old[abs(z_old) > 3]
+```
+
+#### Part K: Boxplot of new data
+```{r}
+#Create box plot of new data:
+boxplot(new, main = "New Voltages", ylab = "volts")
+```
+
+There are acutally no outliers in the new dataset, thanks to the wider IQR.
+
+#### Part L: ZScore of new data
+```{r}
+#Use Z scores to detect outliers here
+z_new = (new - mean(new))/ sd(new)
+
+#Display outlier values
+print("Outlier Values:")
+new[abs(z_new) > 3]
+```
+There are no outliers at the new location
+
+#### Part M:
+```{r}
+#Create side by side box plot
+ggplot(voltage, aes(x = LOCATION, y = VOLTAGE, fill = LOCATION)) + geom_boxplot(staplewidth = 0.3) + ggtitle("Side by side of New and Old Locations")
+```
+
+## Question 12: 
+```{r}
+#Import the roughness data
+roughness = read.csv("ROUGHPIPE.csv")
+```
+
+Lets check the ASSUMPTIONS
+```{r}
+hist(roughness$ROUGH, 6)
+```
+
+This shows that the data is not unimodal or symmetric through the mode, so Chebyshevs rule must be used.
+If we use Chybyshevs rule:
+```{r}
+#1 - 1/k**2#Returns data expected to be within k std dev at least. 
+
+k = 4
+
+print("Around 95% of data:")
+1 -1/4**2
+```
+What is the value of 1 standard deviation?
+
+```{r}
+sd_rough = sd(roughness$ROUGH)
+cat("Std Dev: ", sd_rough)
+```
+
+Now, just calculate the mean +- 4* the standard deviation
+```{r}
+mean_rough = mean(roughness$ROUGH)
+
+min = mean_rough - 4 * sd_rough
+max = mean_rough + 4 * sd_rough
+
+cat("Approximately 95% of the data will be between ", min, " and ", max )
+```
+
+## Question 13:
+
+#### Part A:
+```{r}
+ant_data = read.csv("GOBIANTS.csv")
+species = ant_data$AntSpecies
+
+#count values 
+counts = table(species)
+
+#Find the mode:
+mode_ants = names(which.max(counts))
+
+#Calculate the mean
+mean_ants = mean(species)
+
+#Calculate the median
+median_ants = median(species)
+cat("Mean: ", mean_ants, "Median: ", median_ants, "Mode: ", mode_ants)
+```
+The median and the mode are both around 5, while the mean is significantly higher at around 13. This inidcates that there are larger values in species that are skewing the average to the right.
+
+#### Part B:
+I would use the median to find the center of the ant species distribution because this gives a much better image of the number of species found at a typical site, where 13 or so would be too high for most sites.
+
+#### Part C:
+```{r}
+#Plant cover at 5 dry steppe sites
+plant_cov = ant_data[ant_data$Region == "Dry Steppe"]$PlantCov
+
+#count values 
+counts = table(plant_cov)
+
+#Find the mode:
+mode_plants = names(which.max(counts))
+
+#Calculate the mean
+mean_plants = mean(plant_cov)
+
+#Calculate the median
+median_plants = median(plant_cov)
+cat("Dry Steppe Mean: ", mean_plants, "Median: ", median_plants, "Mode: ", mode_plants)
+```
+
+####Part D:
+```{r}
+#Plant cover at 6 gobi desert sites
+plant_cov = ant_data[ant_data$Region == "Gobi Desert",]$PlantCov
+
+#count values 
+counts = table(plant_cov)
+
+#Find the mode:
+mode_plants = names(which.max(counts))
+
+#Calculate the mean
+mean_plants = mean(plant_cov)
+
+#Calculate the median
+median_plants = median(plant_cov)
+cat("Dry Steppe Mean: ", mean_plants, "Median: ", median_plants, "Mode: ", mode_plants)
+```
+
+#### Part E:
+Based on these two parts and the mean and median of both, the Gobi Desert plant cover is typically less as shown by the decrease in the mean and median in this region.
+
+## Question 14:
+
+#### Part A:
+```{r}
+#Import the galaxy data
+galaxy_data = read.csv("GALAXY2.csv")
+
+#Visualize this data using a histogram
+velocity = galaxy_data$VELOCITY
+hist(velocity, 15, main = "A1775 Velocity (km/s)")
+```
+
+#### Part B:
+In the above graph, there is a lot of evidence of the double cluster theory. This is because the data on the histogram is very bimodal, meaning that the sources of the two peaks are most likely seperate sources of data, in this case from two different source galaxies.
+
+#### Part C: 
+This data needs to be broken up into two diffent sets, one for each cluster.
+The value 21250 is chosen for the cutoff because there is no overlap on the histogram.
+
+Cluster A:
+```{r}
+group_A = velocity[velocity < 21250]
+
+#Calculate mean and standard deviation
+mean_A = mean(group_A)
+sd_A = sd(group_A)
+
+cat("Mean of Group A:", mean_A, "Standard Deviation of Group A:", sd_A)
+```
+
+Cluster B:
+```{r}
+group_B = velocity[velocity >= 21250]
+
+#Calculate mean and standard deviation
+mean_B = mean(group_B)
+sd_B = sd(group_B)
+
+cat("Mean of Group B:", mean_B, "Standard Deviation of Group B:", sd_B)
+```
+
+#### Part D:
+According to the historgram and bimodal nature of the data, a reading of 20000 km/s is most likely from the slower cluster, A1775A.
+
+## Question 15:
+Recreate the graph
+```{r}
+ddt = Intro2R::ddt
+
+ggplot(ddt, aes(x = RIVER, y = LENGTH, fill = SPECIES)) + geom_boxplot() + ggtitle("Jonathan Douglas")
+```
 
