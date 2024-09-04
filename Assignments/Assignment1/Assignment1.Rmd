@@ -11,10 +11,13 @@ output:
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 library(Intro2R)
+library(ggplot2)
 setwd("/Users/jonathandouglas/MATH4753/FALL244753doug0080/Assignments/Assignment1/")
 ```
 
 # Questions
+
+## Problems Completed: 15/15
 
 ## Question 1: How will grading be done this semester?
 
@@ -49,6 +52,25 @@ coplot(ddt$LENGTH ~ ddt$WEIGHT | ddt$RIVER * ddt$SPECIES, col = unique(m))
 ```
 #### Part B:
 The bottom left three plots are showing the Length vs Weight plot of Catfish in the FCM, LCM, and SCM rivers. 
+
+#### Part C:
+Line A breaks up the list of miles for each data point in the DDT dataset into a list of unique values, thus creating a list of finite qualitative conditions for each value the miles variable.
+
+#### Part D:
+Line B counts how many unique values of MILE there are. 
+
+#### Part E:
+The top 6 plots are empty because there were no LMBass or SMBuffalo sampled in the tributaries, just CCatfish.
+
+#### Part F:
+```{r}
+#Find the mean ddt in this river
+mean_cat_fcm = ddt$DDT[ddt$SPECIES == "CCATFISH" & ddt$RIVER == "FCM"]
+
+#print the mean of ddt
+cat("Mean of DDT in Catfish in the FCM river:", mean(mean_cat_fcm))
+```
+
 
 ## Question 3:
 
@@ -178,7 +200,7 @@ data = rep(catagories, freq)
 pareto(data, mn = "Pareto of Robotic Limbs")
 ```
 
-#Question 9
+## Question 9
 
 Info for question
 ```{r}
