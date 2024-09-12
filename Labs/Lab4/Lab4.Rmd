@@ -1,0 +1,190 @@
+---
+title: "Lab#4"
+author: "Jonathan Douglas"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1: Set and get the working directory
+
+Set and Find the WD
+
+```{r}
+setwd("/Users/jonathandouglas/MATH4753/FALL244753doug0080/Labs/Lab4")
+getwd()
+```
+
+## Task 2: Read in the spruce dataset
+
+```{r}
+library(Intro2R)
+library(s20x)
+library(ggplot2)
+
+#Read in the spruce dataset
+spruce = Intro2R::spruce
+
+#Print the head of the spruce dataset
+head(spruce)
+```
+
+## Task 3:
+
+#### Create Lowess Scatter plot
+
+```{r}
+library(s20x)
+
+#Create the trendscatter plot
+trendscatter(spruce$Height~spruce$BHDiameter, f = 0.5)
+```
+
+#### Create Linear model object
+
+```{r}
+#Create linear model
+spruce.lm = with(spruce, lm(Height~BHDiameter))
+#Find the residuals
+height.res = residuals(spruce.lm)
+#Find the fitted values
+height.fit = fitted(spruce.lm)
+
+#Plot the residuals vs fitted values
+plot(height.fit, height.res, main = "Plot of Residuals vs Fitted Values")
+```
+
+#### Create Trendscatter of Residuals vs Fitted Values
+
+```{r}
+#Create the trendscatter plot of Residuals vs Fitted Values
+trendscatter(height.res~height.fit, f = 0.5)
+```
+
+This graph shows that there is a trend similar to an upside down parabola when residuals are plotted with fitted values. This is a lot less linear than the fit found in the first graph.
+
+#### Make Plot of Residuals
+
+```{r}
+plot(height.res, spruce$BHDiameter, main = "Plot of Residuals vs BHD")
+```
+
+#### Check for normality and shapiro wilk
+
+```{r}
+#Do Normal check with shapiro wilk
+normcheck(spruce.lm, shapiro.wilk = TRUE)
+```
+
+The p-value from the Shapiro-Wilk test is 0.29. This shows that the the null hypothesis of a normally distributed dataset is confirmed.
+
+#### Conclusion
+
+I don't think that the straight line model is the best fit for this dataset because the plot of residuals vs fitted values still shows a signal, which means that there is a better model for this dataset.
+
+## Task 4:
+
+```{r}
+#Create a quadratic model
+quad.lm = with(spruce, lm(Height~BHDiameter + I(BHDiameter^2)))
+
+#Create a new scatter plot
+plot(spruce$Height ~ spruce$BHDiameter, main = "Height vs BHD with quadratic fit", xlab = "Breast Height Diameter (cm)", ylab = 
+       "Height of Tree (m)", pch = 21, bg = "blue", cex = 1.2,
+     xlim = c(0, 1.1 * max(spruce$BHDiameter)), ylim = 
+       c(0, 1.1 * max(spruce$Height)))
+
+#Or more general method
+myplot=function(x){
+ quad.lm$coef[1] +quad.lm$coef[2]*x  + quad.lm$coef[3]*x^2
+} 
+#Add the quadratic fir to the plot
+curve(myplot, lwd=2, col="steelblue",add=TRUE)
+```
+
+#### Create Plot of Residuals vs Fitted Values
+
+```{r}
+#Here is an easier way to make this plot that I accidentally discovered
+plot(quad.lm, which = 1)
+```
+
+#Construct a QQ check
+
+```{r}
+#Do QQ test
+normcheck(quad.lm, shapiro.wilk = TRUE)
+```
+
+The P-value of the shapiro wilk test here is 0.684, which strongly indicates a normally distributed dataset.
+
+## Task 5:
+
+#### Summarize quad.lm
+
+```{r}
+summary(quad.lm)
+```
+
+| Coefficient | Value    |
+|-------------|----------|
+| Beta0       | 0.861    |
+| Beta1       | 1.4696   |
+| Beta2       | -0.02746 |
+
+#### Find the interval estimates
+```{r}
+#Calculate the interval estimates of the quadratic fit.
+ciReg(quad.lm)
+```
+
+#### Use predict to find the expected height of the spruce trees
+```{r}
+pre_height = predict(quad.lm, data.frame(BHDiameter = c(15, 18, 20)))
+cat("Quadratic: Expected height with 15 cm BHD:", pre_height[1], '\n')
+cat("Expected height with 18 cm BHD:", pre_height[2], '\n')
+cat("Expected height with 20 cm BHD:", pre_height[3])
+```
+
+#### Compare this with previous predictions
+```{r}
+pre_heightl = predict(spruce.lm, data.frame(BHDiameter = c(15, 18, 20)))
+cat("Linear: Expected height with 15 cm BHD:", pre_heightl[1], '\n')
+cat("Expected height with 18 cm BHD:", pre_heightl[2], '\n')
+cat("Expected height with 20 cm BHD:", pre_heightl[3], '\n')
+
+```
+
+When comparing the two models, it is apparent that the quadratic model gives larger estimated heights for the same inputted breast height diameters. 
+
+#### Calculate the residual sum of squares
+```{r}
+#This is the residual sum of squares.
+RSS = sum((residuals(quad.lm))^2)
+# Total sum of squares
+TSS = sum((spruce$Height - mean(spruce$Height))^2)
+
+# Calculate R-squared
+R2 = 1 - (RSS / TSS)
+cat("RSS from Quad:", R2,'\n')
+
+RSSl = sum((residuals(spruce.lm))^2)
+# Total sum of squares
+TSSl = sum((spruce$Height - mean(spruce$Height))^2)
+# Calculate R-squared
+R2l = 1 - (RSSl / TSSl)
+cat("RSS from Linear model:", R2l)
+```
+
+The R^2 is larger for the quadratic model than the linear one, indicating that this model is a better fit
+
+
+
