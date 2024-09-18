@@ -106,7 +106,7 @@ plot(spruce$Height ~ spruce$BHDiameter, main = "Height vs BHD with quadratic fit
 myplot=function(x){
  quad.lm$coef[1] +quad.lm$coef[2]*x  + quad.lm$coef[3]*x^2
 } 
-#Add the quadratic fir to the plot
+#Add the quadratic for to the plot
 curve(myplot, lwd=2, col="steelblue",add=TRUE)
 ```
 
@@ -185,6 +185,136 @@ cat("RSS from Linear model:", R2l)
 ```
 
 The R^2 is larger for the quadratic model than the linear one, indicating that this model is a better fit
+
+#### Use the adjusted R^2 values
+```{r}
+#Calculate adjusted R-squared
+linR2 = summary(spruce.lm)$adj.r.squared  # Adjusted R-squared for linear model
+quadR2 = summary(quad.lm)$adj.r.squared    # Adjusted R-squared for quadratic model
+cat("Linear Adj R^2:", linR2, '\n')
+cat("Quadratic Adj R^2:", quadR2, '\n')
+```
+
+This calculation still shows that the quadratic model has the better R^2 value when compared to the linear model, and thus should be used here.
+
+#### What does multiple R^2 mean in this case
+The most variablility in height is explained by the first model because this implies that the growth is more random and doesn't follow a quadratic fit. 
+
+#### Do Anova analysis
+```{r}
+#Compare models:
+anova(spruce.lm,quad.lm)
+```
+
+This function shows that the residual sum of squares is smaller on the quadratic model, meaning it is more accuraute than the linear one. 
+
+#### Calculate TSS, RSS, and MSS
+```{r}
+#This is the residual sum of squares.
+RSS = sum((residuals(quad.lm))^2)
+# Total sum of squares
+TSS = sum((spruce$Height - mean(spruce$Height))^2)
+#Mean sum of squares
+MSS = TSS - RSS
+
+#Print all these
+cat("TSS:", TSS, " RSS:", RSS, " MSS:", MSS, '\n')
+```
+
+####Find MSS / TSS
+```{r}
+#FInd this value
+cat("MSS/TSS:", MSS/TSS)
+```
+
+
+## Task 6:
+
+#### Investigate unusual points 
+```{r}
+#Investigate unusual points
+cooks20x(quad.lm)
+```
+
+The Cooks Distance is a measure of how important each point is for creating the fitted model. The higher the value of the cooks distance, the greater the effect changing that point will have on the fitted model.
+
+This plot shows that there are 3 points have have a very large influence on the model that is created.
+
+#### Remove the point with the largest cooks distance.
+This point is located at index 24
+```{r}
+#Remove the 24th point, which has the highest influence on the model.
+spruce2 = spruce[-24,]
+
+#create the new model
+quad2.lm = with(spruce2, lm(Height~BHDiameter + I(BHDiameter^2)))
+
+print("Old Model")
+summary(quad.lm)
+
+print("New Model")
+summary(quad2.lm)
+```
+
+The new model with the point removed has a higher R^2 value than the origional quadratic model, meaning that this new new model is a better fit for the data. The missing point was probably contributing a lot to the bad fit. 
+
+## Task 7:
+
+#### Show the equation for a fit with two segments in Latex
+$$
+y = \beta_{0} + \beta_{1} x + \beta_2 (x - x_k)I(x> x_k)
+$$
+
+When (x>xk), I = 1 and thus the B2 term exists, but when (x <= 0), the I function is 0. This is how different line segments are made. 
+
+#### Recreate the plot shown in the lab document.
+```{r}
+#Create the piecewise linear fit
+## piecewise linear model in R
+## Model y = b0 + b1x + b2(x-xk)*(x>xk)
+sp2.df=within(spruce, X<-(BHDiameter-18)*(BHDiameter>18)) # this makes a new variable and places it within the same df
+
+lmp=lm(Height~BHDiameter + X,data=sp2.df)
+tmp=summary(lmp)
+
+myf = function(x,coef){
+  coef[1]+coef[2]*(x) + coef[3]*(x-18)*(x-18>0)
+}
+plot(spruce,main="Piecewise regression")
+
+curve(myf(x,coef=tmp$coefficients[,"Estimate"] ),add=TRUE, lwd=2,col="Blue")
+abline(v=18)
+text(18,16,paste("R sq.=",round(tmp$r.squared,4) ))
+
+```
+
+## Task 8: Create and test the R package
+```{r}
+#Import intro to R
+library(FALL244753doug0080)
+
+#Do a test call of my function, LinearFitPlot
+linear_model = FALL244753doug0080::LinearFitPlot(spruce$BHDiameter, spruce$Height, title = "Test plot for Function", xaxislab = "BHD", yaxislab = "Height")
+
+summary(linear_model)
+```
+
+#### Explaination:
+Here, the function that I created is the LinearFitPlot function. This function takes a set of data doe the x and y axis and creates a linear model object for the data. This model is then plotted over the scatterplot of the dataset given for the x and y axis, and the graph is printed. The linear model object is then returned. 
+
+#### Last 10 lines of check:
+  Undefined global functions or variables:
+    abline lm
+  Consider adding
+    importFrom("graphics", "abline")
+    importFrom("stats", "lm")
+  to your NAMESPACE file.
+
+0 errors ✔ | 3 warnings ✖ | 3 notes ✖
+Error: R CMD check found WARNINGs
+Execution halted
+
+Exited with status 1.
 
 
 

@@ -27,6 +27,8 @@ getwd()
 
 ```{r}
 library(Intro2R)
+library(s20x)
+library(ggplot2)
 
 #Read in the spruce dataset
 spruce = Intro2R::spruce
@@ -95,7 +97,7 @@ plot(spruce$Height ~ spruce$BHDiameter, main = "", xlab = "Breast Height Diamete
 abline(spruce.lm)
 
 #Add graph 2:
-plot(spruce$Height ~ spruce$BHDiameter, main = "", xlab = "Breast Height Diameter (cm)", ylab = 
+plot(spruce$Height ~ spruce$BHDiameter,  main = "RSS", xlab = "Breast Height Diameter (cm)", ylab = 
        "Height of Tree (m)", pch = 21, bg = "blue", cex = 1.2,
      xlim = c(0, 1.1 * max(spruce$BHDiameter)), ylim = 
        c(0, 1.1 * max(spruce$Height)))
@@ -105,7 +107,7 @@ residuals = with(spruce, predict(spruce.lm, data.frame(BHDiameter)))
 with(spruce, {segments(BHDiameter, Height, BHDiameter, residuals)})
 
 #Add graph 3:
-plot(spruce$Height ~ spruce$BHDiameter, main = "", xlab = "Breast Height Diameter (cm)", ylab = 
+plot(spruce$Height ~ spruce$BHDiameter, main = "MSS", xlab = "Breast Height Diameter (cm)", ylab = 
        "Height of Tree (m)", pch = 21, bg = "blue", cex = 1.2,
      xlim = c(0, 1.1 * max(spruce$BHDiameter)), ylim = 
        c(0, 1.1 * max(spruce$Height)))
@@ -117,7 +119,7 @@ abline(h = mean(spruce$Height))
 with(spruce, {segments(BHDiameter, residuals, BHDiameter, mean(spruce$Height), col="red")})
 
 #Add graph 4:
-plot(spruce$Height ~ spruce$BHDiameter, main = "Jonathan Douglas' plot", xlab = "Breast Height Diameter (cm)", ylab = 
+plot(spruce$Height ~ spruce$BHDiameter, main = "Jonathan Douglas' plot, TSS", xlab = "Breast Height Diameter (cm)", ylab = 
        "Height of Tree (m)", pch = 21, bg = "blue", cex = 1.2,
      xlim = c(0, 1.1 * max(spruce$BHDiameter)), ylim = 
        c(0, 1.1 * max(spruce$Height)))
@@ -130,19 +132,59 @@ with(spruce, {segments(BHDiameter, spruce$Height, BHDiameter, mean(spruce$Height
 
 ```
 
+#### Calculate TSS, MSS, and RSS.
+
+Perform calculation for MSS:
+```{r}
+MSS = sum((fitted(spruce.lm) - mean(spruce$Height))^2)
+cat("MSS:", MSS)
+```
+
+Perform calculations for RSS:
+```{r}
+#This is the residual sum of squares.
+RSS = sum((residuals(spruce.lm))^2)
+cat("RSS:", RSS)
+```
+
+Perform Calculations for TSS:
+```{r}
+TSS = MSS + RSS
+cat("TSS:", TSS)
+```
+
+Calculate MSS / TSS:
+```{r}
+cat("MSS / TSS (R^2):", MSS / TSS)
+```
+
+This value is the R^2 value for this dataset.
+
+See if TSS = RSS + MSS
+```{r}
+TSS_calc = sum((spruce$Height - mean(spruce$Height))^2)
+cat("TSS:", TSS, " TSS_calc:", TSS_calc)
+```
+MSS + RSS does equal TSS
+
 ## Task 5: Find the summary of the linear fit
 
 ```{r}
+summary(spruce.lm)
 coef(spruce.lm)
+
 ```
 
 #### Y intercept and slope: 
-y-intercept = 9.1468 = B0 Slope = 0.4815 = B1
+y-intercept = 9.1468 = B0; Slope = 0.4815 = B1
 
 #### Equation:
 
 $$
-\text{Height} = \beta_{0} + \beta_{1} \cdot x
+\hat{Height} = \hat\beta_{0} + \hat\beta_{1} \cdot x
+$$
+$$
+\hat{Height} = 9.1468 + 0.4815 \cdot x
 $$
 
 #### Predict values:
@@ -154,22 +196,44 @@ line_fit = function(BHD){
 ```
 
 Use the function to predict the height at various BHD
-
-
-
 ```{r}
-obj = lm(Height~BHDiameter, data = spruce.df)
-summary(obj)
-plot(Height~BHDiameter, data = spruce.df)
-abline(obj)
-library(s20x)
-trendscatter(Height~BHDiameter,f=0.7, data=spruce.df)
+#Diameter of 15
+cat("Predicted Height with a 15 cm diameter:", line_fit(15), "m",  '\n')
+cat("Predicted Height with a 18 cm diameter:", line_fit(18), "m", '\n')
+cat("Predicted Height with a 20 cm diameter:", line_fit(20), "m", '\n')
+```
+^^ I didn't realize there was a predict function, bit this also works.
+
+## Task 6: Recreate the graphic in the google slides
+```{r}
+library(ggplot2)
+
+#Create the plot:
+ggplot(spruce, aes(x = BHDiameter, y = Height, color = BHDiameter)) + geom_point() +
+  geom_line() + geom_smooth(method = "lm") + 
+  ggtitle("Spruce Height vs BHD")
 ```
 
-#Task 7 This is how you place images in RMD documents
+## Task 7: Add in graphs created by shiny
 
+#### Place in the graph with just dots
 <center>
 
-!["name of image"](gheat.png){width="70%"}
+!["Just Dots"](g.png){width="80%"}
 
 </center>
+
+#### Place the graph with dots and line
+<center>
+
+!["Plot with Line"](gLine.png){width="80%"}
+
+</center>
+
+#### Place the graph with regression
+<center>
+
+!["Plot with Linear Regression"](gR.png){width="80%"}
+
+</center>
+
