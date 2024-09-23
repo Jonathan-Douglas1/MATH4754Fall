@@ -1,0 +1,252 @@
+---
+title: "Lab#5"
+author: "Jonathan Douglas"
+date: "`r Sys.Date()`"
+output:
+  html_document:
+    toc: true
+    toc_float: true
+  pdf_document:
+    toc: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Task 1: Set and get the working directory
+
+Set and Find the WD
+
+```{r}
+setwd("/Users/jonathandouglas/MATH4753/FALL244753doug0080/Labs/Lab5")
+getwd()
+```
+
+## Task 2: Create sample distributions
+```{r}
+## sampling function
+# iter = iterations, n=sample size
+# set default values
+mybin=function(iter=100,n=10, p=0.5){ 
+  # make a matrix to hold the samples
+  #initially filled with NA's
+  sam.mat=matrix(NA, nr=n, nc=iter, byrow=TRUE)
+  #Make a vector to hold the number of successes in each trial
+  succ=c()
+  for( i in 1:iter){
+    #Fill each column with a new sample
+    sam.mat[,i]=sample(c(1,0), n, replace=TRUE, prob=c(p,1-p))
+    #Calculate a statistic from the sample (this case it is the sum)
+    succ[i]=sum(sam.mat[,i])
+  }
+  #Make a table of successes
+  succ.tab=table(factor(succ, levels=0:n))
+  #Make a barplot of the proportions
+  barplot(succ.tab/(iter), col=rainbow(n+1), main="Binomial simulation", xlab="Number of successes")
+  succ.tab/iter
+}
+
+```
+
+#### Distribution with 100 iterations
+```{r}
+#100 iterations
+mybin(iter=100,n=10, p=0.7)
+```
+
+####Distribution with 200 iterations
+```{r}
+#200 iterations
+mybin(iter=200,n=10, p=0.7)
+```
+
+#### Distribution with 500 iterations
+```{r}
+#500 iterations
+mybin(iter=500,n=10, p=0.7)
+```
+
+#### Distribution with 1000 iterations
+```{r}
+#1000 iterations
+mybin(iter=1000,n=10, p=0.7)
+```
+
+#### Distribution with 10000 iterations
+```{r}
+#10000 iterations
+mybin(iter=10000,n=10, p=0.7)
+```
+
+#### Check this graph with the binomial distribution
+```{r}
+#dbinom function
+dbinom(0:10, size = 10, prob = 0.7)
+```
+
+This distribution matches very strongly to the table from the last distribution.
+
+## Task 3: Bag of marbles problem
+
+####Sample without replacement
+n = 20, p = 12/20
+```{r}
+#Use sample function for the marble problem.
+#First, we are going to create a vector of 1s and 0s
+marble_color = c(rep(1, 12), rep(0, 8))
+sample(marble_color, size = 5, replace = FALSE)
+```
+
+#### Sample with replacement
+```{r}
+#Use sample function for the marble problem.
+#First, we are going to create a vector of 1s and 0s
+marble_color = c(rep(1, 12), rep(0, 8))
+sample(marble_color, size = 5, replace = TRUE)
+```
+
+#### Use the myhyper() function
+```{r}
+myhyper=function(iter=100,N=20,r=12,n=5){
+  # make a matrix to hold the samples
+  #initially filled with NA's
+  sam.mat=matrix(NA,nr=n,nc=iter, byrow=TRUE)
+  #Make a vector to hold the number of successes over the trials
+  succ=c()
+  for( i in 1:iter){
+    #Fill each column with a new sample
+    sam.mat[,i]=sample(rep(c(1,0),c(r,N-r)),n,replace=FALSE)
+    #Calculate a statistic from the sample (this case it is the sum)
+    succ[i]=sum(sam.mat[,i])
+  }
+  #Make a table of successes
+  succ.tab=table(factor(succ,levels=0:n))
+  #Make a barplot of the proportions
+  barplot(succ.tab/(iter), col=rainbow(n+1), main="HYPERGEOMETRIC simulation", xlab="Number of successes")
+  succ.tab/iter
+}
+```
+
+#### myhyper call with 100 iterations
+```{r}
+#myhyper call with 100 iterations
+myhyper(iter=100,n=5, N=20,r=12)
+```
+
+#### myhyper call with 200 iterations
+```{r}
+#myhyper call with 200 iterations
+myhyper(iter=200, n=5, N=20, r=12)
+```
+
+#### myhyper call with 500 iterations
+```{r}
+#myhyper call with 500 iterations
+myhyper(iter=500,n=5, N=20,r=12)
+```
+
+#### myhyper call with 1000 iterations
+```{r}
+#myhyper call with 1000 iterations
+myhyper(iter=1000,n=5, N=20,r=12)
+```
+
+#### myhyper call with 10000 iterations
+```{r}
+#myhyper call with 10000 iterations
+myhyper(iter=10000,n=5, N=20,r=12)
+```
+
+#### Verify with the dhyper() function
+```{r}
+dhyper(x=0:5, m=12, n=8, k=5)
+```
+
+Our hyper function matches farily consistently with the R dhyper function
+
+## Task 4: mysample function
+
+#### Import the mysample function
+```{r}
+#The mysample function
+mysample=function(n, iter=10,time=0.5){
+  for (i in 1:iter){
+    #make a sample
+    s=sample(1:10,n,replace=TRUE)
+    # turn the sample into a factor
+    sf=factor(s,levels=1:10)
+    #make a barplot
+    barplot(table(sf)/n,beside=TRUE,col=rainbow(10), 
+    main=paste("Example sample()", " iteration ", i, " n= ", n,sep="") ,
+    ylim=c(0,0.2)
+    )
+    
+    #release the table
+    Sys.sleep(time)
+  }
+}
+
+#mysample(n=1000, iter=30, time = 1)#This is commented out
+mysample(n=1000, iter=1, time = 1)#This is ran so that only one plot appears
+```
+
+What this function is doing is it creates random samples of numbers 1 -10 and does this random sample n number of times. It then compiles the fraction of each sampled value into a bar chart, and the chart is printed. This process is repeated iter number of times. 
+
+## Task 5: Sample Calculations
+
+#### Calculate the combinations (choose function)
+```{r}
+#Calculate combinations
+x1 = choose(n = 8, k = 4)
+cat("8 choose 4:", x1)
+```
+
+#### Poisson Distribution
+```{r}
+#Find the probability of a poisson distribiution for y ≤ 4
+prob_less_4 = ppois(4, lambda = 2)
+
+#Find probability of greater than 4
+cat("Probability of y > 4:", (1 - prob_less_4))
+```
+
+#### Negative Binomial Distribution
+```{r}
+#  This means that in R we need n=3 (size), x=y-r=10-3=7
+r_nbinom = dnbinom(7,3,0.4)  # Nu Failures, Nu of successes, prob success
+mynbin=function(y,r,p){
+  choose(y-1,r-1)*p^r*(1-p)^(y-r)
+}
+
+cat("R Nbinom function:", r_nbinom, '\n')
+cat("Our Negative Binom Function:", mynbin(10,3,0.4))
+
+```
+
+#### Binomial Distribution
+```{r}
+#Find the probability of P <= 8
+cat("P <= 8:", pbinom(8, 15, 0.4))
+```
+
+## Task 6: Test my new function
+
+This is the function mybin
+```{r}
+#Import my package
+library(FALL244753doug0080)
+
+#Run the function mybin from above
+FALL244753doug0080::mybin(iter=235,n=15, p=0.4)#Here is a test run of the new function
+```
+
+This function works as expected with no problems.
+
+
+
+
+
+
+
+
