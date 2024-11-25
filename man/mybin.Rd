@@ -9,9 +9,9 @@ mybin(iter = 100, n = 10, p = 0.5)
 \arguments{
 \item{iter}{- The number of times the experiment is run}
 
-\item{n}{- the number of samples}
+\item{n}{- The number of samples}
 
-\item{p}{- the probability of a success in each sample}
+\item{p}{- The probability of a success in each sample}
 }
 \description{
 mybin function

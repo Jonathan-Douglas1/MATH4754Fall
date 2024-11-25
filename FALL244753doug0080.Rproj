@@ -17,5 +17,6 @@ StripTrailingWhitespace: Yes
 
 BuildType: Package
 PackageUseDevtools: Yes
+PackagePath: /Users/jonathandouglas/MATH4753/FALL244753doug0080
 PackageInstallArgs: --no-multiarch --with-keep.source
 PackageRoxygenize: rd,collate,namespace,vignette
