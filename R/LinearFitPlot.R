@@ -8,6 +8,9 @@
 #' @param xaxislab - x axis label (String)
 #' @param yaxislab - y axis label (String)
 #'
+#'
+#'
+#'
 #' @return data.lm - the linear model of the dataset
 #' @export
 #'

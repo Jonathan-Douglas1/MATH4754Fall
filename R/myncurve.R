@@ -13,6 +13,11 @@ utils::globalVariables("x")
 #'
 #'
 #' @return - a list containing relavent variables and the probabilty of left tail distribution of a
+#'
+#' @examples
+#' # example code
+#' myncurve(mu = 0, sigma = 5, a = 0)
+#'
 #' @export
 
 myncurve = function(mu, sigma, a){

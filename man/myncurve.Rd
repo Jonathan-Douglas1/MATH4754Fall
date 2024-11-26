@@ -19,3 +19,8 @@ myncurve(mu, sigma, a)
 \description{
 Title
 }
+\examples{
+# example code
+myncurve(mu = 0, sigma = 5, a = 0)
+
+}

@@ -16,3 +16,8 @@ mybin(iter = 100, n = 10, p = 0.5)
 \description{
 mybin function
 }
+\examples{
+mybin(iter = 100, n = 10, p = 0.5)
+
+
+}

@@ -18,3 +18,6 @@ mycltp(n = 5, iter = 1000, lambda = 10, ...)
 \description{
 mycltp
 }
+\examples{
+mycltp(n= 5,iter = 1000,lambda=10)
+}

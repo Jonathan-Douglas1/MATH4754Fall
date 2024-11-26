@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+#' myboot2(iter=10000, rnorm(50, mean = 2, sd = 3),fun="mean",alpha=0.05,cx=1.5)
 myboot2<-function(iter=10000,x,fun="mean",alpha=0.05,cx=1.5,...){  #Notice where the ... is repeated in the code
     n=length(x)   #sample size
 

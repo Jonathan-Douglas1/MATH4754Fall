@@ -12,6 +12,7 @@
 #' @export
 #'
 #' @examples
+#' mycltp(n= 5,iter = 1000,lambda=10)
 mycltp=function(n= 5,iter = 1000,lambda=10, ...){
   ## r-random sample from the Poisson
   y=rpois(n*iter,lambda=lambda)

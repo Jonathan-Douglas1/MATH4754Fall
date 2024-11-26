@@ -4,6 +4,9 @@
 #' @param n - The number of samples
 #' @param p - The probability of a success in each sample
 #'
+#' @examples
+#' mybin(iter = 100, n = 10, p = 0.5)
+#'
 #'
 #' @export
 mybin=function(iter=100,n=10, p=0.5){
